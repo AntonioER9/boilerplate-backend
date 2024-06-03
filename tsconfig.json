@@ -1,0 +1,16 @@
+{
+  "extends": "@tsconfig/node18-strictest-esm/tsconfig.json",
+  "compilerOptions": {
+    "module": "CommonJS",
+    "removeComments": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "allowSyntheticDefaultImports": true,
+    "declaration": true,
+    "sourceMap": true,
+    "baseUrl": "./src",
+    "outDir": "./dist",
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "**/*.spec.ts", "**/*.mock.ts", "**/*.model.ts"]
+}

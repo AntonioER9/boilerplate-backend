@@ -1,0 +1,33 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ${K8S_DEPLOYMENT_NAME}
+  namespace: ${K8S_NAMESPACE}
+  labels:
+    environment: ${CI_ENVIRONMENT_NAME}
+    app: ${K8S_DEPLOYMENT_NAME}
+    ApplicationName: ${K8S_DEPLOYMENT_NAME}
+  annotations:
+    kubernetes.io/ingress.class: ${K8S_INGRESS_TARGET_CLASS}
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+    nginx.ingress.kubernetes.io/force-ssl-redirect: 'true'
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "Content-Security-Policy: default-src 'self'"
+      more_set_headers "X-Frame-Options: SAMEORIGIN";
+      more_set_headers "X-Content-Type-Options: nosniff";
+      more_set_headers "Referrer-Policy: same-origin";
+      more_set_headers "Strict-Transport-Security: max-age=31536000; includeSubDomains; preload";
+      add_header "Permissions-Policy: accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()";
+      more_clear_headers "Server";
+spec:
+  rules:
+    - host: ${INTERNAL_ENDPOINT}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ${K8S_DEPLOYMENT_NAME}
+                port:
+                  number: ${APP_PORT}

@@ -1,0 +1,14 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "sonarsource.sonarlint-vscode",
+    "streetsidesoftware.code-spell-checker",
+    "irongeek.vscode-env",
+    "ms-azuretools.vscode-docker",
+    "usernamehw.errorlens",
+    "christian-kohler.path-intellisense",
+    "chakrounanas.turbo-console-log",
+    "pflannery.vscode-versionlens",
+  ]
+}

@@ -1,0 +1,32 @@
+---
+version: "2"
+plugins:
+  duplication:
+    enabled: false
+    config:
+      languages:
+        - javascript
+        - typescript
+  eslint:
+    enabled: false
+  fixme:
+    enabled: true
+exclude_patterns:
+  - config/
+  - db/
+  - dist/
+  - features/
+  - "**/node_modules/"
+  - script/
+  - "**/spec/"
+  - "**/test/"
+  - "**/tests/"
+  - Tests/
+  - "**/vendor/"
+  - "**/*_test.go"
+  - "**/*.d.ts"
+  - "**/*.min.js"
+  - "**/*.min.css"
+  - "**/__tests__/"
+  - "**/__mocks__/"
+

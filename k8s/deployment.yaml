@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${K8S_DEPLOYMENT_NAME}
+  namespace: ${K8S_NAMESPACE}
+  labels:
+    environment: ${CI_ENVIRONMENT_NAME}
+    app: ${K8S_DEPLOYMENT_NAME}
+    ApplicationName: ${K8S_DEPLOYMENT_NAME}
+  annotations:
+    deployer: "${GITLAB_USER_NAME} ${GITLAB_USER_EMAIL}"
+    project_url: "${CI_PROJECT_URL}"
+    description: "Deployment ${K8S_DEPLOYMENT_NAME}"
+    changelog: "${CI_COMMIT_TITLE}"
+spec:
+  replicas: ${K8S_REPLICAS}
+  revisionHistoryLimit: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: ${K8S_ROLLING_UPDATE_MAX_SURGE}
+      maxUnavailable: ${K8S_ROLLING_UPDATE_MAX_UNAVAILABLE}
+  selector:
+    matchLabels:
+      app: ${K8S_DEPLOYMENT_NAME}
+  template:
+    metadata:
+      labels:
+        app: ${K8S_DEPLOYMENT_NAME}
+    spec:
+      containers:
+        - name: ${K8S_DEPLOYMENT_NAME}
+          image: ${CI_REGISTRY_IMAGE}:${CI_PIPELINE_IID}
+          ports:
+            - containerPort: ${APP_PORT}
+              protocol: TCP
+          envFrom:
+            - secretRef:
+                name: secret-${K8S_DEPLOYMENT_NAME}
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: ${APP_PORT}
+            initialDelaySeconds: 20
+            timeoutSeconds: 30
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: ${APP_PORT}
+            initialDelaySeconds: 20
+            periodSeconds: 60
+            timeoutSeconds: 60
+          resources:
+            requests:
+              memory: ${K8S_RESOURCES_REQ_MEM}
+              cpu: ${K8S_RESOURCES_REQ_CPU}
+            limits:
+              memory: ${K8S_RESOURCES_LIMIT_MEM}
+              cpu: ${K8S_RESOURCES_LIMIT_CPU}
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - topologyKey: topology.kubernetes.io/zone
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+              weight: 100
+      nodeSelector:
+        ${K8S_SELECTOR_ROLE}
+      imagePullSecrets:
+        - name: gitlab-registry-credentials

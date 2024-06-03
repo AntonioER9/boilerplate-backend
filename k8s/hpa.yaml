@@ -1,0 +1,29 @@
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: ${K8S_DEPLOYMENT_NAME}
+  namespace: ${K8S_NAMESPACE}
+  labels:
+    environment: ${CI_ENVIRONMENT_NAME}
+    app: ${K8S_DEPLOYMENT_NAME}
+    ApplicationName: ${K8S_DEPLOYMENT_NAME}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: ${K8S_DEPLOYMENT_NAME}
+  minReplicas: ${K8S_MIN_REPLICAS}
+  maxReplicas: ${K8S_MAX_REPLICAS}
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: ${K8S_CPU_AVG_UTIL}
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: ${K8S_MEM_AVG_UTIL}

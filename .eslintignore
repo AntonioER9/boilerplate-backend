@@ -1,0 +1,11 @@
+# don't lint build output (make sure it's set to your correct build folder name)
+coverage
+database
+dist
+docs
+k8s
+node_modules
+*.spec.ts
+*.e2e-spec.ts
+*.mock.ts
+*.model.ts

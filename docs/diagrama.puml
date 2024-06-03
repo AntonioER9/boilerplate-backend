@@ -1,0 +1,104 @@
+@startuml
+title Arquitectura CDA General
+
+skinparam linetype polyline
+skinparam linetype ortho
+top to bottom direction
+package "AWS-cencomerce" {
+    package "ns:Self-service" {
+        
+        rectangle "Front CDA" as frontCDA #085a95;text:white;
+        rectangle "kong" as bff #085a95;text:white;
+        rectangle "Backend" as backend #085a95;text:white;
+        rectangle "ticket" as ticket #gray;text:white;
+        rectangle "tracking" as traking #gray;text:white;
+        rectangle "transaction" as transaction #gray;text:white;
+        rectangle "static-content" as staticContent #gray;text:white;
+        rectangle "form" as form #gray;text:white;
+        rectangle "auth" as auth #gray;text:white;
+        database "RDS" as dbBackend #085a95;text:white;
+
+    }
+
+    package "ns:otros" {
+        rectangle "hermes" as hermes #darkorange;text:white;
+        rectangle "salesOrder" as salesOrder #darkorange;text:white;
+        rectangle "Tipificador" as Janis #1fa02e;text:white;
+        rectangle "API-Apismdigital" as apismdigital #1fa02e;text:white;
+    }
+}
+
+package "Terceros" {
+    ' txd
+    rectangle "Siebel (TXD)" as siebelTXD #009edf;text:white;
+    rectangle "salesforce(auth)" as salesforce_auth #009edf;text:white;
+
+    ' Supermercado
+    node "RPA-CENCO" as rpaCenco #1fa02e;text:white;
+    rectangle "API-VTEX" as vtex #1fa02e;text:white;
+
+    ' hogar
+    rectangle "Siebel (Easy)" as siebelHogar #ef4036;text:white;
+    rectangle "siebel-managment-service(tracking)" as siebelManagerService #ef4036;text:white;
+}
+
+' only txd
+package "AWS-TxD" {
+    package "ns:post-venta" {
+        rectangle "Hound" as hound #009edf;text:white;
+    }
+}
+
+' only hogar
+package "Rackspace" {
+    database "Bocbol" as bocbol #ef4036;text:white;
+}
+
+[frontCDA] -[#black]down-> [bff]
+[bff] -[#black,dotted]down-> [backend]
+
+[backend] -[#black]up-> [dbBackend]
+[backend] -[#black]down-> [ticket]
+[backend] -[#black]down-> [traking]
+[backend] -[#black]down-> [transaction]
+[backend] -[#black]down-> [auth]
+[backend] -[#black]-> [form]
+[backend] -[#black]left-> [staticContent]
+
+[backend] -[#darkorange]up-> [hermes]
+
+[auth] -[#darkgreen]-> [vtex]
+[auth] -[#darkcyan]-> [salesforce_auth]
+
+
+' ' RELACIONES HOGAR
+[ticket] .[#red].> [siebelHogar]
+[ticket] -[#darkcyan]-> [siebelTXD]
+[ticket] -[#black]up-> [dbBackend]
+
+[transaction] -[#red,thickness=1]-> [bocbol]
+[transaction] -[#darkorange,thickness=1]up-> [salesOrder]
+[transaction] -[#darkgreen,thickness=1]--> [apismdigital]
+
+form -[#black]up--> [dbBackend]
+
+[traking] -[#red,thickness=2]--> [siebelManagerService]
+[traking] -[#darkgreen,thickness=2]--> [apismdigital]
+[traking] -[#darkcyan,thickness=2]-> [hound]
+
+
+' ' RELACIONES SUPERMERCADO
+
+[rpaCenco] -[#darkgreen]-> [ticket]
+[rpaCenco] -[#darkgreen]-> [Janis]
+
+legend top right
+    |Color| Entorno |
+    |<#085a95>| Cda|
+    |<#gray>|Por implementar Cda|
+    |<#darkorange>|Cencommerce|
+    |<#red>| Mejoramiento Hogar|
+    |<#1fa02e>| Supermercados|
+    |<#009edf>| Tiendas por departamento|
+endlegend
+@enduml

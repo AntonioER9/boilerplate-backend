@@ -1,0 +1,33 @@
+{
+  "moduleDirectories": ["node_modules", "./src"],
+  "moduleFileExtensions": ["js", "json", "ts"],
+  "rootDir": "./src",
+  "testEnvironment": "node",
+  "testRegex": ".*\\.spec\\.ts$",
+  "transform": {
+    "^.+\\.(t|j)s$": ["ts-jest", { "tsconfig": "tsconfig.json" }]
+  },
+  "coverageDirectory": "../coverage",
+  "collectCoverageFrom": ["modules/**/*.ts", "!modules/health/*.ts"],
+  "coveragePathIgnorePatterns": [
+    ".*\\.controller\\.ts$",
+    ".*\\.guard\\.ts$",
+    ".*\\.module\\.ts$",
+    ".*\\.entity\\.ts$",
+    ".*\\.model\\.ts$",
+    ".*\\.dto\\.ts$",
+    ".*\\.strategy\\.ts$",
+    ".*\\.decorator\\.ts$",
+    ".*\\.guard\\.ts$",
+    ".*\\.mock\\.ts$"
+  ],
+  "coverageReporters": ["html", "text", "text-summary", "cobertura"],
+  "coverageThreshold": {
+    "global": {
+      "branches": 80,
+      "functions": 80,
+      "lines": 80,
+      "statements": -10
+    }
+  }
+}

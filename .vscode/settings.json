@@ -1,0 +1,10 @@
+{
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "typescript.preferences.importModuleSpecifier": "shortest",
+  "[env]": {
+    "editor.defaultFormatter": "IronGeek.vscode-env"
+  },
+  "[dockerfile]": {
+    "editor.defaultFormatter": "ms-azuretools.vscode-docker"
+  }
+}
